@@ -9,17 +9,15 @@ namespace CRUD_EF.Repository
     public interface IUserRepository<T>
     {
         List<T> GetAllUser();
-        T GetUserById(Guid id);
+        T GetUserById(Guid userId);
         bool AddUser(T user);
-        bool EditUser(Guid id ,T user);
+        bool EditUser(Guid userId, T user);
         bool DeleteUser(Guid id);
         bool IsValidName(string fullname);
-        bool IsValidNameEdit(Guid id,string fullname);
-        public bool IsExistUser(Guid id);
-        public bool IsUserListEmty(List<T> userList);
-        public List<User> SearchByCondition(UserSearch condition);
-       
-        
-        
+        bool IsValidNameEdit(Guid id, string fullname);
+        bool IsExistUser(Guid userId);
+        bool IsUserListEmty(List<T> userList);
+        List<User> SearchByCondition(UserSearch condition);
+        Guid CheckFormatGuid(string id);
     }
 }

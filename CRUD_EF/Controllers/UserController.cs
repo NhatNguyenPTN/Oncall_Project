@@ -18,9 +18,13 @@ namespace CRUD_EF.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        // private IUserRepository<User> _userRepository;        
+        // private IUserRepository<User> _userRepository;
+        private readonly IUserRepository<User> _userRepository;
+        public UserController(IUserRepository<User> userRepository)
+        {
+            _userRepository = userRepository;
+        }
 
-        UserRepository userRepository = new UserRepository();
 
         [Route("users")]
         [HttpGet]
@@ -28,8 +32,8 @@ namespace CRUD_EF.Controllers
         {
             try
             {
-                var userList = userRepository.GetAllUser();
-                if (userRepository.IsUserListEmty(userList))
+                var userList = _userRepository.GetAllUser();
+                if (_userRepository.IsUserListEmty(userList))
                 {
                     return Ok("User List Is Emty ");
                 }
@@ -50,16 +54,13 @@ namespace CRUD_EF.Controllers
             {
                 if (!ModelState.IsValid) { return BadRequest(); }
 
-                Guid userId = userRepository.CheckFormatGuid(id);
+                Guid userId = _userRepository.CheckFormatGuid(id);
 
                 if (userId == Guid.Empty) { return BadRequest("Error Format"); }
 
-                //note
-                if (userRepository.IsExistUser(userId))
-                {
-                    var user = userRepository.GetUserById(userId);
-                    return Ok(user);
-                }
+                var user = _userRepository.GetUserById(userId);
+
+                if (user != null) { return Ok(user); }
                 else
                 {
                     return BadRequest("User dose not exist");
@@ -79,7 +80,7 @@ namespace CRUD_EF.Controllers
             {
                 if (!ModelState.IsValid) { return BadRequest(); }
 
-                var result = userRepository.SearchByCondition(user);
+                var result = _userRepository.SearchByCondition(user);
                 return Ok(result);
             }
             catch
@@ -96,17 +97,14 @@ namespace CRUD_EF.Controllers
             {
                 if (!ModelState.IsValid) { return BadRequest("Binding false"); }
 
-                bool isValidName = userRepository.IsValidName(user.FullName);
+                bool isValidName = _userRepository.IsValidName(user.FullName);
 
                 if (isValidName)
                 {
-                    var result = userRepository.AddUser(user);
+                    var result = _userRepository.AddUser(user);
                     return Ok(result);
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                else { return BadRequest(); }
             }
             catch
             {
@@ -122,15 +120,15 @@ namespace CRUD_EF.Controllers
             {
                 if (!ModelState.IsValid) { return BadRequest(); }
 
-                Guid userId = userRepository.CheckFormatGuid(id);
+                Guid userId = _userRepository.CheckFormatGuid(id);
                 if (userId == Guid.Empty) { return BadRequest("Error Format"); }
 
-                bool isValidName = userRepository.IsValidNameEdit(userId, user.FullName);
+                bool isValidName = _userRepository.IsValidNameEdit(userId, user.FullName);
                 if (!isValidName) { return BadRequest("Name is exist"); }
 
-                if (userRepository.IsExistUser(userId))
+                if (_userRepository.IsExistUser(userId))
                 {
-                    var result = userRepository.EditUser(userId, user);
+                    var result = _userRepository.EditUser(userId, user);
                     return Ok(result);
                 }
                 return BadRequest("User dose not exist");
@@ -147,15 +145,15 @@ namespace CRUD_EF.Controllers
         {
             try
             {
-                Guid userId = userRepository.CheckFormatGuid(id);
+                Guid userId = _userRepository.CheckFormatGuid(id);
 
                 if (!ModelState.IsValid) { return BadRequest(); }
 
                 if (userId == Guid.Empty) { return BadRequest("Error Format"); }
 
-                if (userRepository.IsExistUser(userId))
+                if (_userRepository.IsExistUser(userId))
                 {
-                    var result = userRepository.DeleteUser(userId);
+                    var result = _userRepository.DeleteUser(userId);
                     return Ok(result);
                 }
                 return BadRequest("User dose not exist");
@@ -166,22 +164,11 @@ namespace CRUD_EF.Controllers
             }
         }
 
-        [Route("test")]
+        [Route("user/test")]
         [HttpDelete]
-        public string TestDB()
+        public ActionResult Test([FromQuery] User user)
         {
-            using var dbcontext = new UserContext();
-            string dbname = dbcontext.Database.GetDbConnection().Database;
-            var kq = dbcontext.Database.EnsureCreated();
-
-            if (kq)
-            {
-                return dbname;
-            }
-            else
-            {
-                return "fail";
-            }
+            return Ok();
         }
     }
 }

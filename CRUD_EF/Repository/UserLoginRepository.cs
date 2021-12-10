@@ -13,10 +13,18 @@ namespace CRUD_EF.Repository
 {
     public class UserLoginRepository : IUserLoginRepository
     {
+        private readonly UserContext _userContext;
+
+        public UserLoginRepository(UserContext userContext)
+        {
+            _userContext = userContext;
+        }
+
+
         public bool IsExistUser(string fullname)
         {
-            using var userContext = new UserContext();
-            var user = (from u in userContext.users
+            //using var userContext = new UserContext();
+            var user = (from u in _userContext.Users
                         where (u.FullName.Trim(' ').ToLower() == fullname.Trim(' ').ToLower())
                         select u).SingleOrDefault();
             if (user != null)
@@ -30,8 +38,8 @@ namespace CRUD_EF.Repository
         }
         public bool IsTrueEmail(UserLogin user)
         {
-            using var userContext = new UserContext();
-            var userFind = (from u in userContext.users
+          //  using var userContext = new UserContext();
+            var userFind = (from u in _userContext.Users
                             where (u.FullName.Trim(' ').ToLower() == user.FullName.Trim(' ').ToLower() && u.Email == user.Email)
                             select u).FirstOrDefault();
             if (user == null)
@@ -46,8 +54,8 @@ namespace CRUD_EF.Repository
 
         public List<User> GetAllUser()
         {
-            using var userContext = new UserContext();
-            var userList = userContext.users.ToList();
+         //   using var userContext = new UserContext();
+            var userList = _userContext.Users.ToList();
             return userList;
         }
 

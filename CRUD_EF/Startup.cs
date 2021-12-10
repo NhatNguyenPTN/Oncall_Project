@@ -17,6 +17,9 @@ using CRUD_EF.Repository;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using CRUD_EF.DbConnection;
+using Microsoft.EntityFrameworkCore;
+using CRUD_EF.Migrations;
 
 namespace CRUD_EF
 {
@@ -36,9 +39,16 @@ namespace CRUD_EF
             //AutoMapper
             services.AddAutoMapper(typeof(Startup));
 
-            //DI
+            //DbContext
+            services.AddDbContext<UserContext>(option => {
+                option.UseNpgsql(Configuration.GetConnectionString("MyDb"));
+            });
+
+            //DI            
             services.AddTransient<IUserRepository<User>, UserRepository>();
+
             services.AddTransient<IUserLoginRepository, UserLoginRepository>();
+
             services.AddTransient<IValidator<User>,UserValidator>();
 
             //Validation
@@ -67,6 +77,7 @@ namespace CRUD_EF
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

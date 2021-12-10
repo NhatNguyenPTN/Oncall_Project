@@ -1,5 +1,6 @@
 ﻿using CRUD_EF.DbConnection;
 using CRUD_EF.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,25 +11,32 @@ namespace CRUD_EF.Repository
 {
     public class UserRepository : IUserRepository<User>
     {
+        private readonly UserContext _userContext;
+
+        public UserRepository(UserContext userContext)
+        {
+            _userContext = userContext;
+        }
+
         public List<User> GetAllUser()
         {
-            using var userContext = new UserContext();
-            var userList = userContext.users.ToList();
+            //sing var userContext = new UserContext();
+            var userList = _userContext.Users.ToList();
 
             return userList;
         }
         public User GetUserById(Guid id)
         {
-            using var userContext = new UserContext();
-            var user = userContext.users.Find(id);
+            //using var userContext = new UserContext();
+            var user = _userContext.Users.Find(id);
             return user;
         }
         public bool AddUser(User user)
         {
-            using var userContext = new UserContext();
-            userContext.users.Add(user);
+            //   using var userContext = new UserContext();
+            _userContext.Users.Add(user);
 
-            int result = userContext.SaveChanges();
+            int result = _userContext.SaveChanges();
             if (result > 0)
             {
                 return true;
@@ -37,12 +45,12 @@ namespace CRUD_EF.Repository
         }
         public bool DeleteUser(Guid id)
         {
-            using var userContext = new UserContext();
-            var user = (from u in userContext.users where (u.Id == id) select u).FirstOrDefault();
-            userContext.users.Remove(user);
-            int result = userContext.SaveChanges();
+            //   using var userContext = new UserContext();
+            var user = (from u in _userContext.Users where (u.Id == id) select u).FirstOrDefault();
+            _userContext.Users.Remove(user);
+            int result = _userContext.SaveChanges();
 
-            if (result == 1)
+            if (result > 0)
             {
                 return true;
             }
@@ -53,16 +61,16 @@ namespace CRUD_EF.Repository
         }
         public bool EditUser(Guid userId, User user)
         {
-            using var userContext = new UserContext();
-            var userFind = (from u in userContext.users where (u.Id == userId) select u).FirstOrDefault();
+            //   using var userContext = new UserContext();
+            var userFind = (from u in _userContext.Users where (u.Id == userId) select u).FirstOrDefault();
 
             if (userFind != null)
             {
                 userFind.Age = user.Age;
                 userFind.FullName = user.FullName;
                 userFind.Email = user.Email;
-                               
-                int result = userContext.SaveChanges();
+
+                int result = _userContext.SaveChanges();
 
                 if (result > 0) { return true; } else return false;
             }
@@ -70,10 +78,10 @@ namespace CRUD_EF.Repository
 
 
         }
-        public bool IsExistUser(Guid id)
+        public bool IsExistUser(Guid id) 
         {
-            using var userContext = new UserContext();
-            var user = (from u in userContext.users where (u.Id == id) select u).FirstOrDefault();
+            //   using var userContext = new UserContext();
+            var user = (from u in _userContext.Users where (u.Id == id) select u).FirstOrDefault();
             if (user != null)
             {
                 return true;
@@ -94,89 +102,19 @@ namespace CRUD_EF.Repository
             }
             return true;
         }
-        public List<User> SearchByCondition(UserSearch user)
+        public List<User> SearchByCondition(UserSearch userSearch)
         {
-            using var userContext = new UserContext();
+            var userList = _userContext.Users.ToList();
 
-            bool isExistEmail = user.Email != null;
-            bool isExistFullName = user.FullName != null;
-            bool isExistAge = user.Age > 0;
-
-            var userList = userContext.users.ToList();
-
-            List<User> userLisrSearch = new List<User>();
-
-            //if (!isExistEmail && !isExistFullName && !isExistAge)
-            //{
-            //    return userList;
-            //}
-
-            //if (isExistEmail || isExistFullName || isExistAge)
-            //{
-            //    if (isExistEmail)
-            //    {
-            //        userLisrSearch = userContext.users
-            //              .Where(userItem => userItem.Email.ToLower().Trim(' ').Contains(user.Email.ToLower().Trim(' ')))
-            //              .ToList();
-            //        userLisrSearch = new List<User>(userLisrSearch);
-            //    }
-            //    if (isExistAge)
-            //    {
-            //        userLisrSearch = userContext.users
-            //              .Where(userItem => userItem.Age.Equals(user.Age))
-            //              .ToList();
-            //        userLisrSearch = new List<User>(userLisrSearch);
-            //    }
-            //    if (isExistFullName)
-            //    {
-            //        userLisrSearch = userContext.users
-            //              .Where(userItem => userItem.FullName.ToLower().Trim(' ').Contains(user.FullName.ToLower().Trim(' ')))
-            //              .ToList();
-            //        userLisrSearch = new List<User>(userLisrSearch);
-            //    }
-            //    if (isExistAge && isExistEmail)
-            //    {
-            //        userLisrSearch = userContext.users
-            //                .Where(userItem => userItem.Age.Equals(user.Age))
-            //                .Where(userItem => userItem.Email.ToLower().Contains(user.Email.ToLower()))
-            //                .ToList();
-            //        userLisrSearch = new List<User>(userLisrSearch);
-            //    }
-            //    if (isExistAge && isExistFullName)
-            //    {
-            //        userLisrSearch = userContext.users
-            //              .Where(userItem => userItem.FullName.ToLower().Trim(' ').Contains(user.FullName.ToLower().Trim(' ')))
-            //              .Where(userItem => userItem.Age.Equals(user.Age))                          
-            //              .ToList();
-            //        userLisrSearch = new List<User>(userLisrSearch);
-            //    }
-            //    if (isExistEmail && isExistFullName)
-            //    {
-            //        userLisrSearch = userContext.users
-            //              .Where(userItem => userItem.FullName.ToLower().Trim(' ').Contains(user.FullName.ToLower().Trim(' ')))
-            //              .Where(userItem => userItem.Email.ToLower().Contains(user.Email.ToLower()))
-            //              .ToList();
-            //        userLisrSearch = new List<User>(userLisrSearch);
-            //    }
-            //    if (isExistEmail && isExistAge && isExistFullName)
-            //    {
-            //        userLisrSearch = userContext.users
-            //              .Where(userItem => userItem.FullName.ToLower().Trim(' ').Contains(user.FullName.ToLower().Trim(' ')))
-            //              .Where(userItem => userItem.Age.Equals(user.Age))
-            //              .Where(userItem => userItem.Email.ToLower().Contains(user.Email.ToLower()))
-            //              .ToList();
-            //        userLisrSearch = new List<User>(userLisrSearch);
-            //    }
-            //}            
-
-            var result = userList.Where(u => NotMatch(u, "FullName,Email,Age", user.FullName)).ToList();
-
-
+            var result = userList
+                .Where(user => NotMatch(user, "Email", userSearch.Email))
+                .Where(user => NotMatch(user, "FullName", userSearch.FullName))
+                .ToList();
 
             return result;
         }
 
-        private static IEnumerable<PropertyInfo> GetProperties(object model)
+        public static IEnumerable<PropertyInfo> GetProperties(object model)
         {
             if (model is null)
             {
@@ -222,8 +160,7 @@ namespace CRUD_EF.Repository
         }
         public bool IsValidName(string fullname)
         {
-            using var userContext = new UserContext();
-            var user = (from u in userContext.users
+            var user = (from u in _userContext.Users
                         where (u.FullName.Trim(' ').ToLower() == fullname.Trim(' ').ToLower())
                         select u).FirstOrDefault();
             if (user == null)
@@ -249,9 +186,9 @@ namespace CRUD_EF.Repository
         public bool IsValidNameEdit(Guid id, string fullname)
         {
 
-            using var userContext = new UserContext();
+            //  using var userContext = new UserContext();
 
-            var user = (from u in userContext.users
+            var user = (from u in _userContext.Users
                         where (u.FullName.Trim(' ').ToLower() == fullname.Trim(' ').ToLower())
                         select u).FirstOrDefault();
             if (user == null || user.Id.Equals(id))
