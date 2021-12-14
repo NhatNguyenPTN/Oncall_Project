@@ -1,11 +1,7 @@
-﻿using CRUD_EF.DbConnection;
+﻿using EFCore.DbConnection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CRUD_EF.Migrations
 {

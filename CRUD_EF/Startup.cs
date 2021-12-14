@@ -1,25 +1,27 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using CRUD_EF.Model;
-using CRUD_EF.FluentValidator;
-using CRUD_EF.Repository;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using CRUD_EF.DbConnection;
 using Microsoft.EntityFrameworkCore;
 using CRUD_EF.Migrations;
+
+
+using EFCore.DbConnection;
+using Appservices.UserServices.Interface;
+using Appservices.UserServices;
+using Microsoft.Extensions.Logging;
+using CRUD_EF.Exceptions;
+using EFCore.Model;
+using EFCore.Models;
+using Appservices.FluentValidator;
+using AppRepositories;
 
 namespace CRUD_EF
 {
@@ -41,15 +43,21 @@ namespace CRUD_EF
 
             //DbContext
             services.AddDbContext<UserContext>(option => {
-                option.UseNpgsql(Configuration.GetConnectionString("MyDb"));
+                option.UseNpgsql(Configuration.GetConnectionString("MyDb"),b=> b.MigrationsAssembly("CRUD_EF"));
             });
 
             //DI            
-            services.AddTransient<IUserRepository<User>, UserRepository>();
+            services.AddTransient<IUserService<User>, UserService>();
 
-            services.AddTransient<IUserLoginRepository, UserLoginRepository>();
+            services.AddTransient<UserLoginService, UserLoginService>();
 
-            services.AddTransient<IValidator<User>,UserValidator>();
+            
+
+            services.AddTransient<IRepository<User>, Repository<User>>();            
+            services.AddTransient<UnitOfWork>();
+
+            //DI  Validator
+            services.AddTransient<IValidator<AddUserRequestDto>, UserValidator>();
 
             //Validation
             services.AddControllers().AddFluentValidation();
@@ -75,13 +83,15 @@ namespace CRUD_EF
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env )
         {
             app.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.ConfigureExceptionHandler();
 
             app.UseRouting();
 

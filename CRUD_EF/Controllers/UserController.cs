@@ -1,14 +1,15 @@
-﻿using CRUD_EF.DbConnection;
-using CRUD_EF.Model;
-using CRUD_EF.Repository;
+﻿
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Appservices;
+using EFCore.Model;
+using Appservices.UserServices.Interface;
+using Microsoft.Extensions.Logging;
+using EFCore.Models;
+using AppRepositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,31 +19,20 @@ namespace CRUD_EF.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        // private IUserRepository<User> _userRepository;
-        private readonly IUserRepository<User> _userRepository;
-        public UserController(IUserRepository<User> userRepository)
-        {
-            _userRepository = userRepository;
-        }
 
+        private readonly IUserService<User> _userService;       
+        
+        public UserController(IUserService<User> userService)
+        {
+            _userService = userService;                     
+        }
 
         [Route("users")]
         [HttpGet]
         public ActionResult GetAllUser()
         {
-            try
-            {
-                var userList = _userRepository.GetAllUser();
-                if (_userRepository.IsUserListEmty(userList))
-                {
-                    return Ok("User List Is Emty ");
-                }
-                return Ok(userList);
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            UserResponseDto reponse = _userService.GetAllUser2();                        
+            return Ok(reponse);
         }
 
         [Route("user/{id}")]
@@ -50,125 +40,93 @@ namespace CRUD_EF.Controllers
         [Authorize]
         public ActionResult GetUserById([FromRoute] string id)
         {
-            try
+            if (!ModelState.IsValid) { return BadRequest(); }
+
+            Guid userId = _userService.CheckFormatGuid(id);
+
+            if (userId == Guid.Empty) { return BadRequest("Error Format"); }
+
+            var user = _userService.GetUserById(userId);
+
+            if (user != null) { return Ok(user); }
+            else
             {
-                if (!ModelState.IsValid) { return BadRequest(); }
-
-                Guid userId = _userRepository.CheckFormatGuid(id);
-
-                if (userId == Guid.Empty) { return BadRequest("Error Format"); }
-
-                var user = _userRepository.GetUserById(userId);
-
-                if (user != null) { return Ok(user); }
-                else
-                {
-                    return BadRequest("User dose not exist");
-                }
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest("User dose not exist");
             }
         }
 
         [Route("user")]
         [HttpGet]
-        public ActionResult SearchByCondition([FromQuery] UserSearch user)
+        public ActionResult SearchByCondition([FromQuery] UserSearchRepestDto user)
         {
-            try
-            {
-                if (!ModelState.IsValid) { return BadRequest(); }
+            if (!ModelState.IsValid) { return BadRequest(); }
 
-                var result = _userRepository.SearchByCondition(user);
-                return Ok(result);
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            var result = _userService.SearchByCondition(user);
+            return Ok(result);
         }
 
         [Route("user")]
         [HttpPost]
         public ActionResult AddUser([FromBody] User user)
         {
-            try
-            {
-                if (!ModelState.IsValid) { return BadRequest("Binding false"); }
 
-                bool isValidName = _userRepository.IsValidName(user.FullName);
+            if (!ModelState.IsValid) { return BadRequest("Binding false"); }
 
-                if (isValidName)
-                {
-                    var result = _userRepository.AddUser(user);
-                    return Ok(result);
-                }
-                else { return BadRequest(); }
-            }
-            catch
+            bool isValidName = _userService.IsValidName(user.FullName);
+
+            if (isValidName)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                var result = _userService.AddUser(user);
+                return Ok(result);
             }
+            else { return BadRequest("FullName is exist"); }
         }
 
         [Route("user/{id}")]
         [HttpPut]
         public ActionResult EditUser([FromRoute] string id, [FromBody] User user)
         {
-            try
+
+            if (!ModelState.IsValid) { return BadRequest(); }
+
+            Guid userId = _userService.CheckFormatGuid(id);
+            if (userId == Guid.Empty) { return BadRequest("Error Format"); }
+
+            bool isValidName = _userService.IsValidNameEdit(userId, user.FullName);
+            if (!isValidName) { return BadRequest("Name is exist"); }
+
+            if (_userService.IsExistUser(userId))
             {
-                if (!ModelState.IsValid) { return BadRequest(); }
-
-                Guid userId = _userRepository.CheckFormatGuid(id);
-                if (userId == Guid.Empty) { return BadRequest("Error Format"); }
-
-                bool isValidName = _userRepository.IsValidNameEdit(userId, user.FullName);
-                if (!isValidName) { return BadRequest("Name is exist"); }
-
-                if (_userRepository.IsExistUser(userId))
-                {
-                    var result = _userRepository.EditUser(userId, user);
-                    return Ok(result);
-                }
-                return BadRequest("User dose not exist");
+                var result = _userService.EditUser(userId, user);
+                return Ok(result);
             }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return BadRequest("User dose not exist");
         }
 
         [Route("user/{id}")]
         [HttpDelete]
         public ActionResult DeleteUser(string id)
         {
-            try
+            Guid userId = _userService.CheckFormatGuid(id);
+
+            if (!ModelState.IsValid) { return BadRequest(); }
+
+            if (userId == Guid.Empty) { return BadRequest("Error Format"); }
+
+            if (_userService.IsExistUser(userId))
             {
-                Guid userId = _userRepository.CheckFormatGuid(id);
-
-                if (!ModelState.IsValid) { return BadRequest(); }
-
-                if (userId == Guid.Empty) { return BadRequest("Error Format"); }
-
-                if (_userRepository.IsExistUser(userId))
-                {
-                    var result = _userRepository.DeleteUser(userId);
-                    return Ok(result);
-                }
-                return BadRequest("User dose not exist");
+                var result = _userService.DeleteUser(userId);
+                return Ok(result);
             }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return BadRequest("User dose not exist");
         }
-
-        [Route("user/test")]
-        [HttpDelete]
-        public ActionResult Test([FromQuery] User user)
+        [Route("error-server")]
+        [HttpGet]
+        public ActionResult TesstErrorServer()
         {
-            return Ok();
+            int zero = 0;
+            int result = 4 / zero;
+            return Ok(result);
         }
     }
 }

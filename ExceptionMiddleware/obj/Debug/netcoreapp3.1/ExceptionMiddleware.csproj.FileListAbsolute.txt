@@ -1,0 +1,10 @@
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\bin\Debug\netcoreapp3.1\ExceptionMiddleware.deps.json
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\bin\Debug\netcoreapp3.1\ExceptionMiddleware.dll
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\bin\Debug\netcoreapp3.1\ExceptionMiddleware.pdb
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\obj\Debug\netcoreapp3.1\ExceptionMiddleware.csproj.AssemblyReference.cache
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\obj\Debug\netcoreapp3.1\ExceptionMiddleware.GeneratedMSBuildEditorConfig.editorconfig
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\obj\Debug\netcoreapp3.1\ExceptionMiddleware.AssemblyInfoInputs.cache
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\obj\Debug\netcoreapp3.1\ExceptionMiddleware.AssemblyInfo.cs
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\obj\Debug\netcoreapp3.1\ExceptionMiddleware.csproj.CoreCompileInputs.cache
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\obj\Debug\netcoreapp3.1\ExceptionMiddleware.dll
+D:\PTN\OnCall_Project\User_Project\ExceptionMiddleware\obj\Debug\netcoreapp3.1\ExceptionMiddleware.pdb

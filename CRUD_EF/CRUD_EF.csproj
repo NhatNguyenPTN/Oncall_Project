@@ -21,6 +21,12 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.18" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AppRepositories\Infrastructure.csproj" />
+    <ProjectReference Include="..\Appservices\AppServices.csproj" />
+    <ProjectReference Include="..\EFCore\EFCore.csproj" />
+  </ItemGroup>
+
 
 
 </Project>

@@ -1,11 +1,10 @@
-﻿using AutoMapper;
-using CRUD_EF.Model;
-using CRUD_EF.Repository;
+﻿using Appservices.UserServices;
+using AutoMapper;
+
+using EFCore.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
@@ -18,10 +17,10 @@ namespace CRUD_EF.Controllers
     [ApiController]
     public class AuthenJWTController : ControllerBase
     {
-        private readonly IUserLoginRepository _userLoginRepository;
+        private readonly UserLoginService _userLoginRepository;
         private readonly IMapper _mapper;
 
-        public AuthenJWTController(IUserLoginRepository userLoginRepository, IMapper mapper)
+        public AuthenJWTController(UserLoginService userLoginRepository, IMapper mapper)
         {
             _userLoginRepository = userLoginRepository;
             _mapper = mapper;
@@ -29,7 +28,7 @@ namespace CRUD_EF.Controllers
 
         [Route("auth")]
         [HttpPost]
-        public ActionResult Post([FromBody] UserLogin user)
+        public ActionResult Post([FromBody] UserLoginRequestDto user)
         {
             try
             {

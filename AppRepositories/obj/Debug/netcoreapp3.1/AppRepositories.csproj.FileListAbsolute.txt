@@ -1,0 +1,13 @@
+D:\PTN\OnCall_Project\User_Project\AppRepositories\bin\Debug\netcoreapp3.1\AppRepositories.deps.json
+D:\PTN\OnCall_Project\User_Project\AppRepositories\bin\Debug\netcoreapp3.1\AppRepositories.dll
+D:\PTN\OnCall_Project\User_Project\AppRepositories\bin\Debug\netcoreapp3.1\AppRepositories.pdb
+D:\PTN\OnCall_Project\User_Project\AppRepositories\bin\Debug\netcoreapp3.1\EFCore.dll
+D:\PTN\OnCall_Project\User_Project\AppRepositories\bin\Debug\netcoreapp3.1\EFCore.pdb
+D:\PTN\OnCall_Project\User_Project\AppRepositories\obj\Debug\netcoreapp3.1\AppRepositories.csproj.AssemblyReference.cache
+D:\PTN\OnCall_Project\User_Project\AppRepositories\obj\Debug\netcoreapp3.1\AppRepositories.GeneratedMSBuildEditorConfig.editorconfig
+D:\PTN\OnCall_Project\User_Project\AppRepositories\obj\Debug\netcoreapp3.1\AppRepositories.AssemblyInfoInputs.cache
+D:\PTN\OnCall_Project\User_Project\AppRepositories\obj\Debug\netcoreapp3.1\AppRepositories.AssemblyInfo.cs
+D:\PTN\OnCall_Project\User_Project\AppRepositories\obj\Debug\netcoreapp3.1\AppRepositories.csproj.CoreCompileInputs.cache
+D:\PTN\OnCall_Project\User_Project\AppRepositories\obj\Debug\netcoreapp3.1\AppRepositories.csproj.CopyComplete
+D:\PTN\OnCall_Project\User_Project\AppRepositories\obj\Debug\netcoreapp3.1\AppRepositories.dll
+D:\PTN\OnCall_Project\User_Project\AppRepositories\obj\Debug\netcoreapp3.1\AppRepositories.pdb
