@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EFCore.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,8 +16,7 @@ namespace EFCore.Model
         public string Email { get; set; }
         public string FullName { get; set; }
         public int Age { get; set; }
-        public Guid? CourseId { get; set; }
-        [ForeignKey("CourseId")]
-        public Course Course { get; set; }
+        public Roles Role { get; set; }
+       
     }
 }

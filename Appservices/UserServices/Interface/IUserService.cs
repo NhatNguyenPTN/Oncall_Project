@@ -1,15 +1,19 @@
-﻿using EFCore.Model;
-using EFCore.Models;
+﻿using AppServices.UserServices.DTO;
+using EFCore.Model;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Appservices.UserServices.Interface
 {
     public interface IUserService<T>
     {    
         List<T> GetAllUser();
-        UserResponseDto GetAllUser2();
+        UserResponseListEntityDto GetAllUser2();
+        UserResponseEntityDto GetById2(string userId);
+        UserResponseListEntityDto SearchByCondition2(UserSearchRepestDto condition);
+        UserResponseEntityDto Add2(AddUserRequestDto user);
+        UserResponseEntityDto Edit2(string userId, T user);
+        UserResponseEntityDto Delete2(string id);
         T GetUserById(Guid userId);
         bool AddUser(T user);
         bool EditUser(Guid userId, T user);

@@ -1,7 +1,9 @@
 ﻿using Appservices.UserServices;
+using AppServices.UserServices.DTO;
 using AutoMapper;
 
 using EFCore.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -30,27 +32,49 @@ namespace CRUD_EF.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] UserLoginRequestDto user)
         {
-            try
-            {
-                var isExitUser = _userLoginRepository.IsExistUser(user.FullName);
-                
-                if (isExitUser)
-                {
-                    var token = _userLoginRepository.GenerateToken(user);
-                    return Ok(token);
-                }
-                else
-                {
-                    return NotFound("User dose not exist");
-                }
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
 
+            var currentUser = _userLoginRepository.IsExistUser(user.FullName);
+
+            if (currentUser != null)
+            {
+                user.Roles = currentUser.Role;
+                var token = _userLoginRepository.GenerateToken(user);
+                return Ok(token);
+            }
+            else
+            {
+                return NotFound("User dose not exist");
+            }
         }
 
+        //user role
+        [Route("role-user")]
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        public ActionResult RoleUser()
+        {
+            return Ok(" User Role");
+        }
+
+        //admin role
+        [Route("role-admin")]
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult RoleAdmin()
+        {
+            return Ok(" Admin Role");
+        }
+        //user - admin role
+        [Route("role-admin-user")]
+        [HttpGet]
+        [Authorize(Roles = "Admin,User")]
+        public ActionResult RoleAdminUser()
+        {
+            return Ok(" Admin User Role");
+        }
+
+
+        #region Api test http client
         [Route("test-http-client")]
         [HttpGet]
         public async Task<ActionResult> TestHttpClientAsync()
@@ -79,5 +103,7 @@ namespace CRUD_EF.Controllers
             }
             return Ok(result);
         }
+        #endregion
+
     }
 }

@@ -1,40 +1,34 @@
-﻿using AppRepositories;
-using Appservices.UserServices.Interface;
-using AutoMapper;
+﻿using Appservices.UserServices.Interface;
+using AppServices.UserServices.DTO;
 using EFCore.DbConnection;
 using EFCore.Model;
-using EFCore.Models;
-using Microsoft.Extensions.Logging;
+using Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Appservices.UserServices
 {
     public class UserService : IUserService<User>
     {
         private readonly UserContext _userContext;
-        private readonly IMapper _mapper;
-        private readonly UnitOfWork _unitOfWork;       
-        public UserService(UserContext userContext, IMapper mapper, UnitOfWork unitOfWork)
+        
+        private readonly IUnitOfWork _unitOfWork;
+        public UserService(UserContext userContext, IUnitOfWork unitOfWork)
         {
-            _userContext = userContext;
-            _mapper = mapper;
+            _userContext = userContext;            
             _unitOfWork = unitOfWork;
-            
-
         }
 
         public List<User> GetAllUser()
         {
-            var userList = _userContext.Users.ToList();          
+            var userList = _userContext.Users.ToList();
 
             return userList;
         }
         public User GetUserById(Guid id)
-        {        
+        {
             var user = _userContext.Users.Find(id);
             return user;
         }
@@ -178,20 +172,19 @@ namespace Appservices.UserServices
         }
         public Guid CheckFormatGuid(string id)
         {
-            Guid userId;
+            Guid userId = Guid.Empty;
             bool isValid = Guid.TryParse(id, out userId);
             if (isValid)
             {
                 return userId;
             }
-            else { return Guid.Empty; }
-
+            return userId;
         }
         public bool IsValidNameEdit(Guid id, string fullname)
-        {            
+        {
 
             var user = _userContext.Users
-                        .Where(u => (u.FullName.Trim(' ').ToLower() == fullname.Trim(' ').ToLower())                        )
+                        .Where(u => (u.FullName.Trim(' ').ToLower() == fullname.Trim(' ').ToLower()))
                         .FirstOrDefault();
             if (user == null || user.Id.Equals(id))
             {
@@ -201,13 +194,11 @@ namespace Appservices.UserServices
             {
                 return false;
             };
-
-
         }
 
-        public UserResponseDto GetAllUser2()
+        public UserResponseListEntityDto GetAllUser2()
         {
-            UserResponseDto response = new UserResponseDto();
+            UserResponseListEntityDto response = new UserResponseListEntityDto();
             var userList = _unitOfWork.UserRepository.GetAll();
             if (userList.Count() == 0)
             {
@@ -216,14 +207,152 @@ namespace Appservices.UserServices
                 response.Data = userList;
                 return response;
             }
-            //_logger.LogInformation("Get Successful");
-           // var mm = _mapper.Map<List<UserResponseMapper>>(userList);
 
             response.Success = true;
             response.Message = "Get Successfully";
             response.Data = userList;
 
-            return response; 
+            return response;
+        }
+
+        public UserResponseEntityDto GetById2(string userId)
+        {
+            UserResponseEntityDto response = new UserResponseEntityDto();
+            //Guid currentUserId = CheckFormatGuid(userId);
+            ////Check guid format
+            //if (currentUserId == Guid.Empty)
+            //{
+            //    response.Success = true;
+            //    response.Message = "Error Format";
+            //    return response;
+            //}
+            ////Get user by id
+            //var currentUser = _unitOfWork.UserRepository;
+            //if (currentUser == null)
+            //{
+            //    response.Success = true;
+            //    response.Message = "User dose not exist";
+            //    return response;
+            //}
+            ////Return successfully
+            //response.Success = true;
+            //response.Message = "Get Successfully";
+            //response.Data = currentUser;
+
+            return response;
+        }
+
+        public UserResponseListEntityDto SearchByCondition2(UserSearchRepestDto userSearch)
+        {
+            UserResponseListEntityDto response = new UserResponseListEntityDto();
+            //var userList = _unitOfWork.UserRepository.GetAll();
+
+            //var result = userList
+            //    .Where(user => NotMatch(user, "Email", userSearch.Email))
+            //    .Where(user => NotMatch(user, "FullName", userSearch.FullName))
+            //    .ToList();
+
+            //response.Success = true;
+            //response.Message = "Get Successfully";
+            //response.Data = result;
+
+            return response;
+        }
+
+        public UserResponseEntityDto Add2(AddUserRequestDto userRequestDto)
+        {
+            UserResponseEntityDto response = new UserResponseEntityDto();
+
+            ////can use mapper
+            //User user = new User();
+            //user.Email = userRequestDto.Email;
+            //user.FullName = userRequestDto.FullName;
+            //user.Age = userRequestDto.Age;
+            ////Add user
+            ////
+            ////Save changes
+            //var result = _unitOfWork.SaveChanges();
+            //if (result == 0)
+            //{
+            //    response.Success = false;
+            //    response.Message = "Add false";
+            //}
+            ////Return successfully
+            //response.Success = true;
+            //response.Message = "Add Successfully";
+
+            return response;
+        }
+
+        public UserResponseEntityDto Edit2(string userId, User user)
+        {//is valid name edit
+            UserResponseEntityDto response = new UserResponseEntityDto();
+
+            //Guid currentUserId = CheckFormatGuid(userId);
+            ////Check guid format
+            //if (currentUserId == Guid.Empty)
+            //{
+            //    response.Success = true;
+            //    response.Message = "Error Format";
+            //    return response;
+            //}
+            ////Get user by id
+            //var currentUser = _unitOfWork.UserRepository;
+            //if (currentUser == null)
+            //{
+            //    response.Success = true;
+            //    response.Message = "User dose not exist";
+            //    return response;
+            //}
+            ////Edit User
+
+            ////Save changes
+            //var result = _unitOfWork.SaveChanges();
+            //if (result == 0)
+            //{
+            //    response.Success = false;
+            //    response.Message = "Edit false";
+            //}
+            ////Return successfully
+            //response.Success = true;
+            //response.Message = "Edit Successfully";
+
+            return response;
+        }
+
+        public UserResponseEntityDto Delete2(string userId)
+        {
+            UserResponseEntityDto response = new UserResponseEntityDto();
+
+            //Guid currentUserId = CheckFormatGuid(userId);
+            ////Check guid format
+            //if (currentUserId==Guid.Empty)
+            //{
+            //    response.Success = true;
+            //    response.Message = "Error Format";
+            //    return response;
+            //}
+            ////Get user by id
+            //var currentUser = _unitOfWork.UserRepository;
+            //if (currentUser == null)
+            //{
+            //    response.Success = true;
+            //    response.Message = "User dose not exist";
+            //    return response;
+            //}
+            ////Delete User
+
+            ////Save changes
+            //var result = _unitOfWork.SaveChanges();
+            //if (result == 0) {
+            //    response.Success = false;
+            //    response.Message = "Delete false";                
+            //}
+            ////Return successfully
+            //response.Success = true;
+            //response.Message = "Delete Successfully";           
+
+            return response;
         }
     }
 }

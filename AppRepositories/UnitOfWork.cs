@@ -1,32 +1,23 @@
-﻿using EFCore.DbConnection;
-using EFCore.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using EFCore.Model;
+using Infrastructure.Repositories;
 
-namespace AppRepositories
+namespace Infrastructure
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork :  IUnitOfWork
     {
-        public UserContext DbContext { get; }
-
-        public IRepository<User> UserRepository { get; }
-
-        public UnitOfWork(UserContext context, IRepository<User> users)
-        {
-            DbContext = context;
+            
+         public IUserRepository UserRepository { get; }
+        public DbFactory DbFactory { get; }
+        public UnitOfWork( IUserRepository users, DbFactory dbFactory)
+        {           
             UserRepository = users;
-            UserRepository.DbContext = DbContext;
+            DbFactory = dbFactory;
         }
 
         public int SaveChanges()
         {
-            var iResult = DbContext.SaveChanges();
+            var iResult = DbFactory.DbContext.SaveChanges();
             return iResult;
-        }
-        public void Dispose()
-        {
-            DbContext.Dispose();
-        }
+        }        
     }
 }

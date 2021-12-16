@@ -1,4 +1,5 @@
 ﻿using Appservices.UserServices.Interface;
+using AppServices.UserServices.DTO;
 using EFCore.DbConnection;
 using EFCore.Model;
 using Microsoft.IdentityModel.Tokens;
@@ -21,7 +22,7 @@ namespace Appservices.UserServices
         }
 
 
-        public bool IsExistUser(string fullname)
+        public User IsExistUser(string fullname)
         {
             //using var userContext = new UserContext();
             var user = _userContext.Users
@@ -29,11 +30,11 @@ namespace Appservices.UserServices
                         .SingleOrDefault();
             if (user != null)
             {
-                return true;
+                return user;
             }
             else
             {
-                return false;
+                return null;
             }
         }
         public bool IsTrueEmail(UserLoginRequestDto user)
@@ -69,9 +70,10 @@ namespace Appservices.UserServices
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("FullName", user.FullName)
+                    new Claim("FullName", user.FullName),
+                    new Claim(ClaimTypes.Role, user.Roles.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddSeconds(45),
+                Expires = DateTime.UtcNow.AddMinutes(45),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(secretKyBytes), SecurityAlgorithms.HmacSha512Signature)
             };

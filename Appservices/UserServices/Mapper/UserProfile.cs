@@ -1,17 +1,17 @@
-﻿using AutoMapper;
+﻿using AppServices.UserServices.DTO;
+using AutoMapper;
 using EFCore.Model;
-using EFCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EFCore.MapperConfig
+namespace AppServices.UserServices.Mapper
 {
     public class UserProfile : Profile
     {
         public UserProfile()
         {
-            CreateMap<User, UserLoginRequestDto>();           
+            CreateMap<User, UserLoginRequestDto>();
         }
     }
 }

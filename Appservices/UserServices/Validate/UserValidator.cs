@@ -1,13 +1,14 @@
-﻿using EFCore.DbConnection;
-using EFCore.Models;
+﻿using AppServices.UserServices.DTO;
+using EFCore.DbConnection;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Appservices.FluentValidator
+namespace AppServices.UserServices.Validate
 {
+
     public class UserValidator : AbstractValidator<AddUserRequestDto>
     {
         private readonly UserContext _userContext;
@@ -15,9 +16,7 @@ namespace Appservices.FluentValidator
         public UserValidator(UserContext userContext)
         {
             _userContext = userContext;
-        }
-        public UserValidator()
-        {
+
             RuleFor(user => user.Email)
                 .NotEmpty().WithMessage("Email is required")
                 .EmailAddress().WithMessage("A valid email is required");
@@ -49,5 +48,7 @@ namespace Appservices.FluentValidator
                 return null;
             }
         }
+
     }
 }
+

@@ -1,14 +1,16 @@
-﻿using System;
+﻿using EFCore.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EFCore.Models
+namespace AppServices.UserServices.DTO
 {
-    public class UserResponseMapper
-    {
-        public Guid Id { get; set; }
+    public class AddUserRequestDto
+    {        
         public string Email { get; set; }
         public string FullName { get; set; }
         public int Age { get; set; }
+        public Guid? CourseId { get; set; }        
+        
     }
 }

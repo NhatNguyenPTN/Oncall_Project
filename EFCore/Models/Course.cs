@@ -14,6 +14,6 @@ namespace EFCore.Model
         public Guid CourseId { get; set; }        
         public string Name { get; set; }
         public int Price { get; set; }
-        public virtual ICollection<User> Users { get; set; }
+        //public virtual ICollection<User> Users { get; set; }
     }
 }

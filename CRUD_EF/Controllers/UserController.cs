@@ -1,15 +1,8 @@
-﻿
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Appservices.UserServices.Interface;
+using AppServices.UserServices.DTO;
+using EFCore.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using Appservices;
-using EFCore.Model;
-using Appservices.UserServices.Interface;
-using Microsoft.Extensions.Logging;
-using EFCore.Models;
-using AppRepositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,41 +13,36 @@ namespace CRUD_EF.Controllers
     public class UserController : ControllerBase
     {
 
-        private readonly IUserService<User> _userService;       
-        
+        private readonly IUserService<User> _userService;
+
         public UserController(IUserService<User> userService)
         {
-            _userService = userService;                     
+            _userService = userService;
         }
 
+        #region Get All User
         [Route("users")]
         [HttpGet]
         public ActionResult GetAllUser()
         {
-            UserResponseDto reponse = _userService.GetAllUser2();                        
+            UserResponseListEntityDto reponse = _userService.GetAllUser2();
+          //  var reponse = _userService.GetAllUser();
             return Ok(reponse);
         }
+        #endregion
 
+        #region Get User By Id
         [Route("user/{id}")]
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public ActionResult GetUserById([FromRoute] string id)
         {
-            if (!ModelState.IsValid) { return BadRequest(); }
-
-            Guid userId = _userService.CheckFormatGuid(id);
-
-            if (userId == Guid.Empty) { return BadRequest("Error Format"); }
-
-            var user = _userService.GetUserById(userId);
-
-            if (user != null) { return Ok(user); }
-            else
-            {
-                return BadRequest("User dose not exist");
-            }
+            UserResponseEntityDto reponse = _userService.GetById2(id);
+            return Ok(reponse);
         }
+        #endregion
 
+        #region Sreach By Condition
         [Route("user")]
         [HttpGet]
         public ActionResult SearchByCondition([FromQuery] UserSearchRepestDto user)
@@ -63,63 +51,46 @@ namespace CRUD_EF.Controllers
 
             var result = _userService.SearchByCondition(user);
             return Ok(result);
-        }
 
+            //UserResponseEntityDto reponse = _userService.GetById2(id);
+            //return Ok(reponse);
+        }
+        #endregion
+
+        #region Add User
         [Route("user")]
         [HttpPost]
         public ActionResult AddUser([FromBody] User user)
         {
-
-            if (!ModelState.IsValid) { return BadRequest("Binding false"); }
-
-            bool isValidName = _userService.IsValidName(user.FullName);
-
-            if (isValidName)
-            {
-                var result = _userService.AddUser(user);
-                return Ok(result);
-            }
-            else { return BadRequest("FullName is exist"); }
+            // UserResponseEntityDto reponse = _userService.Add2(user);
+            var result = _userService.AddUser(user);
+            return Ok(result);
         }
+        #endregion
 
+        #region Edit User
         [Route("user/{id}")]
         [HttpPut]
         public ActionResult EditUser([FromRoute] string id, [FromBody] User user)
         {
-
-            if (!ModelState.IsValid) { return BadRequest(); }
-
-            Guid userId = _userService.CheckFormatGuid(id);
-            if (userId == Guid.Empty) { return BadRequest("Error Format"); }
-
-            bool isValidName = _userService.IsValidNameEdit(userId, user.FullName);
-            if (!isValidName) { return BadRequest("Name is exist"); }
-
-            if (_userService.IsExistUser(userId))
-            {
-                var result = _userService.EditUser(userId, user);
-                return Ok(result);
-            }
-            return BadRequest("User dose not exist");
+            UserResponseEntityDto reponse = _userService.GetById2(id);
+            return Ok(reponse);
         }
+        #endregion
 
+        #region Delete User
         [Route("user/{id}")]
         [HttpDelete]
         public ActionResult DeleteUser(string id)
         {
+            //UserResponseEntityDto reponse = _userService.GetById2(id);
             Guid userId = _userService.CheckFormatGuid(id);
-
-            if (!ModelState.IsValid) { return BadRequest(); }
-
-            if (userId == Guid.Empty) { return BadRequest("Error Format"); }
-
-            if (_userService.IsExistUser(userId))
-            {
-                var result = _userService.DeleteUser(userId);
-                return Ok(result);
-            }
-            return BadRequest("User dose not exist");
+            var reponse = _userService.DeleteUser(userId);
+            return Ok(reponse);
         }
+        #endregion
+
+        #region api error server
         [Route("error-server")]
         [HttpGet]
         public ActionResult TesstErrorServer()
@@ -128,5 +99,6 @@ namespace CRUD_EF.Controllers
             int result = 4 / zero;
             return Ok(result);
         }
+        #endregion
     }
 }

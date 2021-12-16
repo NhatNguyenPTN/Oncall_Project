@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace EFCore.Model
+﻿namespace AppServices.UserServices.DTO
 {
     public class UserSearchRepestDto
     {      
