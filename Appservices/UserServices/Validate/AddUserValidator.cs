@@ -8,12 +8,10 @@ using System.Text;
 
 namespace AppServices.UserServices.Validate
 {
-
-    public class UserValidator : AbstractValidator<AddUserRequestDto>
+    public class AddUserValidator : AbstractValidator<AddUserRequestDto>
     {
         private readonly UserContext _userContext;
-
-        public UserValidator(UserContext userContext)
+        public AddUserValidator(UserContext userContext)
         {
             _userContext = userContext;
 
@@ -28,13 +26,18 @@ namespace AppServices.UserServices.Validate
                 .Must(fullname => string.IsNullOrEmpty(GetValidName(fullname)))
                 .WithMessage("FullName is exist");
 
-
             RuleFor(user => user.Age)
                 .NotEmpty().WithMessage("Age is repuired")
                 .Must(age => age > 0).WithMessage("Age must be greater than 0")
                 .Must(age => age < 255).WithMessage("Age must be greater than 255");
         }
-        public string GetValidName(string fullname)
+
+        /// <summary>
+        /// Get fullname of user is exist in system
+        /// </summary>
+        /// <param name="fullname"></param>
+        /// <returns>fullname</returns>
+        private string GetValidName(string fullname)
         {
             var user = _userContext.Users
                         .Where(u => (u.FullName.Trim(' ').ToLower() == fullname.Trim(' ').ToLower()))

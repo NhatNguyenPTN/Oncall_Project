@@ -57,6 +57,24 @@ namespace CRUD_EF.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f64384a6-d858-4798-a6c9-a1b2f34ba7d6"),
+                            Age = 19,
+                            Email = "user@gmail.com",
+                            FullName = "user",
+                            Role = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("0b6d8b7b-c683-45b6-b600-7f733a77b4d7"),
+                            Age = 19,
+                            Email = "admin@gmail.com",
+                            FullName = "admin",
+                            Role = 1
+                        });
                 });
 #pragma warning restore 612, 618
         }

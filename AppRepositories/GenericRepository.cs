@@ -1,6 +1,4 @@
-﻿using EFCore.DbConnection;
-using EFCore.Model;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +12,7 @@ namespace Infrastructure
 
         public GenericRepository(DbFactory dbFactory)
         {
-            _dbFactory = dbFactory;
-            
+            _dbFactory = dbFactory;            
         }
         protected DbSet<T> DbSet
         {

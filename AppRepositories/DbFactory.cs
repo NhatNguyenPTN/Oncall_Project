@@ -12,7 +12,6 @@ namespace Infrastructure
         private readonly Func<UserContext> _dbContextFactory;
         private DbContext _dbContext;
         public DbContext DbContext => _dbContext ??= _dbContextFactory.Invoke();
-
         public DbFactory(Func<UserContext> dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;

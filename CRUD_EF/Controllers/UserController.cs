@@ -12,83 +12,106 @@ namespace CRUD_EF.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
         private readonly IUserService<User> _userService;
-
         public UserController(IUserService<User> userService)
         {
             _userService = userService;
         }
 
-        #region Get All User
+        /// <summary>
+        /// Function to get all user      
+        /// </summary>
+        /// This endpoint is used to get all user is exist on system 
+        /// - GET: /api/users
+        /// <returns>success, message, data</returns>
         [Route("users")]
         [HttpGet]
         public ActionResult GetAllUser()
         {
-            UserResponseListEntityDto reponse = _userService.GetAllUser2();
-          //  var reponse = _userService.GetAllUser();
+            UserResponseListEntityDto reponse = _userService.GetAllUser();
             return Ok(reponse);
         }
-        #endregion
 
-        #region Get User By Id
-        [Route("user/{id}")]
+
+        /// <summary>
+        /// Function to get user by userId
+        /// </summary>
+        /// This endpoint is used to get user by userId 
+        /// - GET: /api/user/userId
+        /// <param name="userId"></param>        
+        /// <returns>success, message, data</returns>
+        [Route("user/{userId}")]
         [HttpGet]
-        //[Authorize]
-        public ActionResult GetUserById([FromRoute] string id)
+        public ActionResult GetUserById([FromRoute] string userId)
         {
-            UserResponseEntityDto reponse = _userService.GetById2(id);
+            UserResponseEntityDto reponse = _userService.GetUserById(userId);
             return Ok(reponse);
         }
-        #endregion
 
-        #region Sreach By Condition
+        /// <summary>
+        /// Funtion to search user by fullname and email
+        /// </summary>
+        /// This endpoint is used to get user by userId 
+        /// - GET: /api/user
+        /// <param name="body"></param>
+        /// <returns>success, message, data</returns>
         [Route("user")]
         [HttpGet]
-        public ActionResult SearchByCondition([FromQuery] UserSearchRepestDto user)
+        public ActionResult SearchByCondition([FromQuery] UserSearchRepestDto body)
         {
-            if (!ModelState.IsValid) { return BadRequest(); }
-
-            var result = _userService.SearchByCondition(user);
-            return Ok(result);
-
-            //UserResponseEntityDto reponse = _userService.GetById2(id);
-            //return Ok(reponse);
+            UserResponseListEntityDto response = _userService.SearchByCondition(body);
+            //var response = _userService.SearchByCondition(user);
+            return Ok(response);
         }
-        #endregion
 
-        #region Add User
+
+        /// <summary>
+        /// Function to add a new user 
+        /// </summary>
+        /// This endpoint is used to create user
+        /// - POST: /api/user
+        /// <param name="body"></param>
+        /// <returns>success, message, data</returns>
         [Route("user")]
         [HttpPost]
-        public ActionResult AddUser([FromBody] User user)
+        public ActionResult AddUser([FromBody] AddUserRequestDto body)
         {
-            // UserResponseEntityDto reponse = _userService.Add2(user);
-            var result = _userService.AddUser(user);
-            return Ok(result);
+            UserResponseEntityDto response = _userService.Add(body);
+            return Ok(response);
         }
-        #endregion
 
-        #region Edit User
+
+        /// <summary>
+        /// Function to edit user by userId
+        /// </summary>
+        /// This endpoint is used to edit user by userId
+        /// - PUT: /api/user/userId
+        /// <param name="userId"></param>
+        /// <param name="body"></param>
+        /// <returns>success, message, data</returns>
         [Route("user/{id}")]
         [HttpPut]
-        public ActionResult EditUser([FromRoute] string id, [FromBody] User user)
+        public ActionResult EditUser([FromRoute] string userId, [FromBody] EditUserRepuestDto body)
         {
-            UserResponseEntityDto reponse = _userService.GetById2(id);
+            UserResponseEntityDto reponse = _userService.Edit(userId, body);
             return Ok(reponse);
         }
-        #endregion
 
-        #region Delete User
+        /// <summary>
+        /// Function to delete user by userId
+        /// </summary>
+        /// This endpoint is used to delete user by userId
+        /// - DELETE: /api/user/userId
+        /// <param name="userId"></param>
+        /// <returns>success, message, data</returns>
         [Route("user/{id}")]
         [HttpDelete]
         public ActionResult DeleteUser(string id)
         {
-            //UserResponseEntityDto reponse = _userService.GetById2(id);
-            Guid userId = _userService.CheckFormatGuid(id);
-            var reponse = _userService.DeleteUser(userId);
+            UserResponseEntityDto reponse = _userService.Delete(id);
             return Ok(reponse);
         }
-        #endregion
+        
 
         #region api error server
         [Route("error-server")]

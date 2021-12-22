@@ -1,10 +1,5 @@
-﻿using EFCore.DbConnection;
-using EFCore.Model;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace Infrastructure
 {

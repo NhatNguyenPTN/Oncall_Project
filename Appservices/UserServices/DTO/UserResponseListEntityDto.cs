@@ -9,7 +9,6 @@ namespace AppServices.UserServices.DTO
     {
         public bool Success { get; set; }
         public string Message { get; set; }        
-        public IEnumerable Data { get; set; }
-       
+        public IEnumerable Data { get; set; }       
     }
 }

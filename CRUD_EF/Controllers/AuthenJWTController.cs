@@ -20,12 +20,12 @@ namespace CRUD_EF.Controllers
     public class AuthenJWTController : ControllerBase
     {
         private readonly UserLoginService _userLoginRepository;
-        private readonly IMapper _mapper;
+        
 
         public AuthenJWTController(UserLoginService userLoginRepository, IMapper mapper)
         {
             _userLoginRepository = userLoginRepository;
-            _mapper = mapper;
+           
         }
 
         [Route("auth")]

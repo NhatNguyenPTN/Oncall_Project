@@ -28,9 +28,7 @@ namespace CRUD_EF
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
-
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -49,11 +47,11 @@ namespace CRUD_EF
 
             services.AddTransient<UserLoginService, UserLoginService>();
 
-            services.AddInfrastructureServices();
+            services.AddInfrastructureServices();                       
 
             //DI  Validator
-            services.AddTransient<IValidator<AddUserRequestDto>, UserValidator>();
-            services.AddTransient<IValidator<User >, EditUserValidator>();
+            services.AddTransient<IValidator<AddUserRequestDto>, AddUserValidator>();
+            services.AddTransient<IValidator<EditUserRepuestDto >, EditUserValidator>();
 
             //Validation
             services.AddControllers().AddFluentValidation();
