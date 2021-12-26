@@ -90,30 +90,5 @@ namespace CRUD_EF.Controllers
             return Ok(result);
         }
 
-        [Route("continuations")]
-        [HttpGet]
-        public async Task<ActionResult> Continuations()
-        {
-            Console.WriteLine("continuations");
-            string result = "";
-            var ping = new Ping();
-            var pingreply = ping.Send("127.0.0.1");
-
-            if (pingreply.Status == IPStatus.Success)
-            {
-                using var httpClient = new HttpClient();
-                var httpMessageRequest = new HttpRequestMessage();
-
-                httpMessageRequest.Method = HttpMethod.Get;
-                httpMessageRequest.RequestUri = new Uri("http://localhost:5008/api/continuations");
-
-                var httpResponseMessage = await httpClient.SendAsync(httpMessageRequest);
-
-                var resultGet = httpResponseMessage.StatusCode.ToString();
-                result = resultGet;
-            }
-            return Ok(result);
-        }
-
     }
 }

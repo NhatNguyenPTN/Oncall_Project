@@ -1,10 +1,7 @@
 ﻿using Appservices.UserServices.Interface;
 using AppServices.UserServices.DTO;
-using EFCore.Model;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CRUD_EF.Controllers
 {
@@ -12,8 +9,8 @@ namespace CRUD_EF.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService<User> _userService;
-        public UserController(IUserService<User> userService)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
@@ -28,7 +25,7 @@ namespace CRUD_EF.Controllers
         [HttpGet]
         public ActionResult GetAllUser()
         {
-            UserResponseListEntityDto reponse = _userService.GetAllUser();
+            UserResponseListEntityDto reponse = _userService.GetAll();
             return Ok(reponse);
         }
 
@@ -44,7 +41,7 @@ namespace CRUD_EF.Controllers
         [HttpGet]
         public ActionResult GetUserById([FromRoute] string userId)
         {
-            UserResponseEntityDto reponse = _userService.GetUserById(userId);
+            UserResponseEntityDto reponse = _userService.GetrById(userId);
             return Ok(reponse);
         }
 
@@ -96,6 +93,7 @@ namespace CRUD_EF.Controllers
             UserResponseEntityDto reponse = _userService.Edit(userId, body);
             return Ok(reponse);
         }
+
 
         /// <summary>
         /// Function to delete user by userId

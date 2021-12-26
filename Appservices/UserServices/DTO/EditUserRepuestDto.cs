@@ -1,7 +1,5 @@
 ﻿using EFCore.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AppServices.UserServices.DTO
 {

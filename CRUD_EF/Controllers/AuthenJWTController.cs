@@ -1,17 +1,12 @@
 ﻿using Appservices.UserServices;
 using AppServices.UserServices.DTO;
 using AutoMapper;
-
-using EFCore.Model;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CRUD_EF.Controllers
 {
@@ -19,12 +14,11 @@ namespace CRUD_EF.Controllers
     [ApiController]
     public class AuthenJWTController : ControllerBase
     {
-        private readonly UserLoginService _userLoginRepository;
-        
+        private readonly UserLoginService _userLoginService;        
 
-        public AuthenJWTController(UserLoginService userLoginRepository, IMapper mapper)
+        public AuthenJWTController(UserLoginService userLoginService, IMapper mapper)
         {
-            _userLoginRepository = userLoginRepository;
+            _userLoginService = userLoginService;
            
         }
 
@@ -33,12 +27,12 @@ namespace CRUD_EF.Controllers
         public ActionResult Post([FromBody] UserLoginRequestDto user)
         {
 
-            var currentUser = _userLoginRepository.IsExistUser(user.FullName);
+            var currentUser = _userLoginService.IsExistUser(user.FullName);
 
             if (currentUser != null)
             {
                 user.Roles = currentUser.Role;
-                var token = _userLoginRepository.GenerateToken(user);
+                var token = _userLoginService.GenerateToken(user);
                 return Ok(token);
             }
             else

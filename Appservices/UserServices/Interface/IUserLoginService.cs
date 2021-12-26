@@ -1,8 +1,6 @@
 ﻿using AppServices.UserServices.DTO;
 using EFCore.Model;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Appservices.UserServices.Interface
 {

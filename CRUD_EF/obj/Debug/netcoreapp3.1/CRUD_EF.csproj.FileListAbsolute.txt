@@ -118,3 +118,5 @@ D:\PTN\OnCall_Project\User_Project\CRUD_EF\bin\Debug\netcoreapp3.1\EFCore.dll
 D:\PTN\OnCall_Project\User_Project\CRUD_EF\bin\Debug\netcoreapp3.1\EFCore.pdb
 D:\PTN\OnCall_Project\User_Project\CRUD_EF\bin\Debug\netcoreapp3.1\Infrastructure.dll
 D:\PTN\OnCall_Project\User_Project\CRUD_EF\bin\Debug\netcoreapp3.1\Infrastructure.pdb
+D:\PTN\OnCall_Project\User_Project\CRUD_EF\bin\Debug\netcoreapp3.1\AppSignalR.dll
+D:\PTN\OnCall_Project\User_Project\CRUD_EF\bin\Debug\netcoreapp3.1\AppSignalR.pdb

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppRepositories\Infrastructure.csproj" />
+    <ProjectReference Include="..\AppSignalR\AppSignalR.csproj" />
     <ProjectReference Include="..\EFCore\EFCore.csproj" />
   </ItemGroup>
 

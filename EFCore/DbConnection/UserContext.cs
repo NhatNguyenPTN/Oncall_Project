@@ -1,9 +1,6 @@
 ﻿using EFCore.Model;
 using EFCore.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EFCore.DbConnection
 {

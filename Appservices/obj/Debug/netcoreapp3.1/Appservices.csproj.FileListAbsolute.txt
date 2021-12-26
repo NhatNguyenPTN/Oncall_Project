@@ -13,3 +13,5 @@ D:\PTN\OnCall_Project\User_Project\Appservices\bin\Debug\netcoreapp3.1\EFCore.pd
 D:\PTN\OnCall_Project\User_Project\Appservices\obj\Debug\netcoreapp3.1\Appservices.csproj.CopyComplete
 D:\PTN\OnCall_Project\User_Project\Appservices\bin\Debug\netcoreapp3.1\Infrastructure.dll
 D:\PTN\OnCall_Project\User_Project\Appservices\bin\Debug\netcoreapp3.1\Infrastructure.pdb
+D:\PTN\OnCall_Project\User_Project\Appservices\bin\Debug\netcoreapp3.1\AppSignalR.dll
+D:\PTN\OnCall_Project\User_Project\Appservices\bin\Debug\netcoreapp3.1\AppSignalR.pdb

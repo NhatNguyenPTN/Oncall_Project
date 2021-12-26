@@ -1,8 +1,9 @@
 ﻿using Appservices.UserServices.Interface;
 using AppServices.UserServices.DTO;
-using EFCore.DbConnection;
+using AppSignalR;
 using EFCore.Model;
 using Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,15 @@ using System.Reflection;
 
 namespace Appservices.UserServices
 {
-    public class UserService : IUserService<User>
+    public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public UserService(UserContext userContext, IUnitOfWork unitOfWork)
+        private IHubContext<NotifyHub> _hub;
+
+        public UserService(IUnitOfWork unitOfWork, IHubContext<NotifyHub> hub)
         {
             _unitOfWork = unitOfWork;
+            _hub = hub; 
         }
         public static IEnumerable<PropertyInfo> GetProperties(object model)
         {
@@ -104,7 +108,7 @@ namespace Appservices.UserServices
         /// Get all user
         /// </summary>
         /// <returns></returns>
-        public UserResponseListEntityDto GetAllUser()
+        public UserResponseListEntityDto GetAll()
         {
             UserResponseListEntityDto response = new UserResponseListEntityDto();
 
@@ -118,6 +122,8 @@ namespace Appservices.UserServices
                 return response;
             }
 
+            _hub.Clients.All.SendAsync("ReceiveMessage", $"SignalR Get {userList.Count()} User");
+
             response.Success = true;
             response.Message = "Get Successfully";
             response.Data = userList;
@@ -125,7 +131,7 @@ namespace Appservices.UserServices
             return response;
         }
 
-        public UserResponseEntityDto GetUserById(string userId)
+        public UserResponseEntityDto GetrById(string userId)
         {
             UserResponseEntityDto response = new UserResponseEntityDto();
 
@@ -207,6 +213,8 @@ namespace Appservices.UserServices
                 response.Success = false;
                 response.Message = "Add false";
             }
+           
+
             //Return successfully
             response.Success = true;
             response.Message = "Add Successfully";
